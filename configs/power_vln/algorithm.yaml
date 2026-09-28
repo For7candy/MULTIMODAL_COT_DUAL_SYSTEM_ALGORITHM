@@ -1,0 +1,118 @@
+schema_version: 1
+algorithm:
+  name: M3D-CoT-DS
+  coordinate_frame: world
+  deterministic: true
+
+input:
+  history_frames: 4
+  maximum_sensor_skew_ms: 100
+  stale_after_ms: 500
+  require_camera_intrinsics: true
+  require_sensor_extrinsics: true
+
+backbone:
+  interface: structured_multimodal_causal_lm
+  model_id: Qwen/Qwen2.5-VL-3B-Instruct
+  local_model_path: UNCONFIGURED
+  hidden_size: 2048
+  maximum_context_tokens: 32768
+  compute_dtype: bfloat16
+  load_strategy: transformers_low_cpu_mem
+  local_files_only: true
+  attention_implementation: sdpa
+  maximum_new_tokens: 768
+  structured_output: json_schema
+  temperature: 0.0
+
+rgb_encoder:
+  implementation: opennav_resnet50
+  source_feature_size: 2048
+  output_tokens: 196
+  projector_output_size: 2048
+
+point_encoder:
+  implementation: pure_pytorch_point_transformer_small
+  point_feature_size: 4
+  hidden_size: 256
+  layers: 4
+  attention_heads: 8
+  neighbors: 16
+  maximum_points: 2048
+  voxel_size_m: 0.05
+  output_tokens: 128
+  projector_output_size: 2048
+
+pose_encoder:
+  representation: translation_fourier_rot6d
+  fourier_bands: 8
+  include_timestamp: true
+  include_covariance: true
+  output_size: 2048
+
+fusion:
+  implementation: bidirectional_local_cross_attention
+  hidden_size: 512
+  output_size: 2048
+  layers: 4
+  attention_heads: 16
+  feed_forward_ratio: 2
+  neighborhood_radius_m: 0.50
+  scene_queries: 64
+  missing_modality_token: true
+
+spatial_memory:
+  voxel_size_m: 0.25
+  confidence_half_life_ms: 5000
+  maximum_age_ms: 20000
+  entity_match_radius_m: 0.75
+  entity_appearance_similarity: 0.70
+  dynamic_track_maximum_age_ms: 3000
+  scene_change_threshold: 0.35
+
+scene_output:
+  schema_version: 1
+  minimum_entity_confidence: 0.50
+  maximum_entities: 256
+
+navigation_output:
+  schema_version: 1
+  minimum_confidence: 0.70
+  default_valid_for_ms: 5000
+  maximum_speed_mps: 0.30
+  default_replan_triggers:
+    - scene_changed
+    - path_blocked
+    - target_missing
+  allow_random_fallback: false
+
+slow_system:
+  mode: event_driven
+  maximum_reasoning_time_ms: 10000
+  cache_scene_by_version: true
+
+fast_system:
+  update_rate_hz: 20
+  input_stale_after_ms: 500
+  minimum_clearance_m: 0.50
+  stop_on_invalid_signal: true
+
+training:
+  default_mode: adapter_only
+  compute_dtype: bfloat16
+  gradient_checkpointing: true
+  gradient_accumulation_steps: 8
+  trainable_modules:
+    - point_encoder
+    - projector
+    - fusion
+    - scene_query
+  lora:
+    rank: 8
+    alpha: 16
+    dropout: 0.05
+    target_modules:
+      - q_proj
+      - k_proj
+      - v_proj
+      - o_proj

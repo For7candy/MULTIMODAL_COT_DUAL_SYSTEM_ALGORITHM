@@ -1,0 +1,46 @@
+{
+  "reasoning": {
+    "task_parse": {
+      "action": "approach",
+      "target": "electrical cabinet",
+      "constraints": []
+    },
+    "grounding": {"entity_id": "cabinet-1", "confidence": 0.95},
+    "candidate_ids": ["candidate-1"],
+    "evaluations": [{
+      "candidate_id": "candidate-1",
+      "reachable": true,
+      "score": 0.9,
+      "reason_codes": ["clear"]
+    }],
+    "decision": {
+      "selected_candidate_id": "candidate-1",
+      "reason_codes": ["highest_score"]
+    }
+  },
+  "signal": {
+    "schema_version": 1,
+    "mission_id": "mission-golden-1",
+    "scene_id": "scene-golden-1",
+    "subtask_id": "step-1",
+    "intent": "approach",
+    "status": "ready",
+    "constraints": {
+      "minimum_clearance_m": 0.5,
+      "maximum_speed_mps": 0.3,
+      "forbidden_region_ids": []
+    },
+    "confidence": 0.9,
+    "generated_at_ms": 1000,
+    "valid_for_ms": 5000,
+    "replan_triggers": ["scene_changed", "path_blocked", "target_missing"],
+    "target_entity_id": "cabinet-1",
+    "candidate_id": "candidate-1",
+    "goal": {
+      "frame_id": "world",
+      "position": {"x": 1.0, "y": 0.0, "z": 0.0},
+      "yaw": 0.0,
+      "tolerance_m": 0.2
+    }
+  }
+}

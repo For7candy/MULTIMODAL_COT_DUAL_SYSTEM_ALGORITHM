@@ -1,0 +1,29 @@
+{
+  "slow_system": {
+    "mode": "event_driven",
+    "periodic_review_seconds": 5.0,
+    "request_timeout_seconds": 8.0,
+    "minimum_plan_confidence": 0.65,
+    "maximum_plan_age_ms": 10000
+  },
+  "fast_system": {
+    "global_planner_hz": 2.0,
+    "local_planner_hz": 10.0,
+    "controller_hz": 20.0,
+    "goal_interface": "nav2_navigate_to_pose"
+  },
+  "safety_monitor": {
+    "monitor_hz": 50.0,
+    "sensor_timeout_ms": 200,
+    "fail_closed": true,
+    "require_approved_electrical_rules": true,
+    "electrical_rules_file": "UNCONFIGURED"
+  },
+  "replan_triggers": {
+    "semantic_anomaly": true,
+    "target_state_changed": true,
+    "path_blocked_seconds": 3.0,
+    "progress_timeout_seconds": 10.0,
+    "plan_expired": true
+  }
+}

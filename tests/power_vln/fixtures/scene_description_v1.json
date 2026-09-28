@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "scene_id": "scene-golden-1",
+  "timestamp_ms": 1000,
+  "frame_id": "world",
+  "observer_pose": {
+    "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "orientation": {"x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0}
+  },
+  "entities": [{
+    "entity_id": "cabinet-1",
+    "category": "electrical_cabinet",
+    "center": {"x": 2.0, "y": 0.0, "z": 1.0},
+    "size": {"x": 0.8, "y": 0.4, "z": 2.0},
+    "yaw": 0.0,
+    "attributes": ["closed"],
+    "confidence": 0.95,
+    "source_observations": ["rgb-1", "pc-1"]
+  }],
+  "relations": [],
+  "free_space": [],
+  "obstacles": [],
+  "candidate_approaches": [{
+    "candidate_id": "candidate-1",
+    "target_entity_id": "cabinet-1",
+    "position": {"x": 1.0, "y": 0.0, "z": 0.0},
+    "yaw": 0.0,
+    "clearance_m": 0.8,
+    "visibility_score": 0.9,
+    "confidence": 0.9
+  }],
+  "uncertainties": []
+}
